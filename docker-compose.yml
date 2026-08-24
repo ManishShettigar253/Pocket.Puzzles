@@ -1,0 +1,29 @@
+# Docker Compose files use YAML syntax. YAML relies heavily on indentation (spaces, NOT tabs) to define structure.
+version: '3.8' # Specifies the version of the Docker Compose file format.
+
+# 'services' defines the different containers that make up your application. 
+# Right now, we only have one service (the frontend), but you could add a 'database' or 'backend' here later.
+services:
+  
+  # The name of our service. You can call this whatever you want.
+  frontend:
+    # 'build' tells Docker how to build the image for this service.
+    build:
+      context: . # Looks for the Dockerfile in the current directory ('.').
+      dockerfile: Dockerfile
+    
+    # 'image' gives your built image a name and tag. 
+    # Format: username/projectname:tag
+    image: manishshettigar/pocketpuzzles:latest
+    
+    # 'container_name' gives the running container a friendly name in Docker Desktop.
+    container_name: pocketpuzzles_app
+    
+    # 'ports' maps ports from your actual computer to the container.
+    # Format: "HostPort:ContainerPort"
+    # We are mapping port 8080 on your Mac to port 80 inside the Nginx container.
+    ports:
+      - "8080:80"
+    
+    # 'restart' tells Docker what to do if the container crashes or your computer restarts.
+    restart: unless-stopped

@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Primary palette - vibrant indigo/violet */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+
+  /* Accent palette - warm amber */
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
+  /* Surface colors */
+  --color-surface-50: #f8fafc;
+  --color-surface-100: #f1f5f9;
+  --color-surface-200: #e2e8f0;
+  --color-surface-700: #334155;
+  --color-surface-800: #1e293b;
+  --color-surface-900: #0f172a;
+  --color-surface-950: #020617;
+
+  /* Game-specific colors */
+  --color-player-x: #f43f5e;
+  --color-player-o: #3b82f6;
+  --color-player-red: #ef4444;
+  --color-player-yellow: #eab308;
+  --color-win-glow: #22c55e;
+}
+
+/* Global resets for mobile game experience */
+html, body, #root {
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode (default) */
+:root {
+  --bg-primary: var(--color-surface-50);
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: var(--color-surface-900);
+  --text-secondary: var(--color-surface-700);
+  --border-color: var(--color-surface-200);
+}
+
+/* Dark mode */
+.dark {
+  --bg-primary: var(--color-surface-950);
+  --bg-secondary: var(--color-surface-900);
+  --bg-card: var(--color-surface-800);
+  --text-primary: var(--color-surface-50);
+  --text-secondary: var(--color-surface-200);
+  --border-color: var(--color-surface-700);
+}
+
+/* Touch optimization for game boards */
+.game-board {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Prevent pull-to-refresh */
+.no-overscroll {
+  overscroll-behavior: none;
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+}
+
+/* Haptic-style press feedback */
+.tap-target {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.tap-target:active {
+  transform: scale(0.92);
+}
+
+/* Glass card effect */
+.glass-card {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Winning cell glow animation */
+@keyframes win-pulse {
+  0%, 100% { box-shadow: 0 0 8px var(--color-win-glow); }
+  50% { box-shadow: 0 0 24px var(--color-win-glow), 0 0 48px var(--color-win-glow); }
+}
+
+.win-cell {
+  animation: win-pulse 1.2s ease-in-out infinite;
+}
+
+/* Disc drop animation for Connect Four */
+@keyframes disc-drop {
+  0% { transform: translateY(-400px); }
+  60% { transform: translateY(0); }
+  75% { transform: translateY(-12px); }
+  90% { transform: translateY(0); }
+  95% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+.disc-drop {
+  animation: disc-drop 0.5s ease-in forwards;
+}
+
+/* Smooth scrollbar hide for game containers */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

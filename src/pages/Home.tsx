@@ -5,6 +5,7 @@ import Layout from '../components/Layout'
 import ThemeToggle from '../components/ThemeToggle'
 import { getAllStats, type GameStats } from '../hooks/useStats'
 import { useMemo } from 'react'
+import mePic from '../assets/me.jpeg'
 
 interface GameCard {
   id: string
@@ -152,7 +153,7 @@ export default function Home() {
                 <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur opacity-40 group-hover:opacity-80 transition duration-500 animate-pulse"></div>
                 <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[var(--bg-card)] bg-gradient-to-br from-indigo-600 to-violet-600">
                   <img
-                    src="/profile.jpg"
+                    src={mePic}
                     alt="Manish"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';

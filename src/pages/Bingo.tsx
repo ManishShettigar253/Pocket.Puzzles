@@ -121,34 +121,6 @@ export default function Bingo() {
         </div>
       </div>
 
-      {/* Keyboard-style Number Pad */}
-      <div className="w-full bg-slate-200 dark:bg-slate-800/80 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] px-1.5 mt-auto">
-        <div className="grid grid-cols-5 gap-1.5 max-w-[400px] mx-auto">
-          {Array.from({ length: 25 }, (_, i) => i + 1).map((num) => {
-            const isCalled = calledNumbers.has(num)
-            const isMyTurn = currentPlayer === 1
-            return (
-              <button
-                key={num}
-                onClick={() => {
-                  if (!isCalled && !gameOver && isMyTurn) handleCallNumber(num)
-                }}
-                disabled={isCalled || gameOver || !isMyTurn}
-                className={`
-                  h-[46px] rounded-[5px] text-[17px] font-medium transition-all flex items-center justify-center
-                  ${isCalled
-                    ? 'bg-slate-300/50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 shadow-none scale-95 opacity-50'
-                    : 'bg-[#fcfcfc] dark:bg-slate-600 text-slate-900 dark:text-white shadow-[0_1px_0_rgba(0,0,0,0.2)] dark:shadow-[0_1px_0_rgba(0,0,0,0.5)] active:scale-95 active:bg-slate-100 dark:active:bg-slate-500'
-                  }
-                  ${!isMyTurn && !isCalled ? 'opacity-60' : ''}
-                `}
-              >
-                {num}
-              </button>
-            )
-          })}
-        </div>
-      </div>
 
       <GameEndModal
         isOpen={gameOver}

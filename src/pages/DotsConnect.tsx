@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
 import { useBlocker } from 'react-router-dom'
 import { useDotsConnect, type GridSize } from '../hooks/useDotsConnect'
 import Layout from '../components/Layout'
@@ -160,7 +159,7 @@ function SizeSelection({ onSelect }: { onSelect: (s: GridSize) => void }) {
   )
 }
 
-function SelectionButton({ size, label, points, color, onClick }: any) {
+function SelectionButton({ label, points, color, onClick }: any) {
   return (
     <button
       onClick={onClick}

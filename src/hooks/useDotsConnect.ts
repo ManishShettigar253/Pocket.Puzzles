@@ -84,14 +84,14 @@ export function useDotsConnect() {
         ...prev,
         [content.color]: [[r, c]]
       }))
-    } else if (content.type === 'path') {
+    } else if (content.type === 'path' && content.index !== undefined) {
       // Truncate path up to this point and start dragging
       setActiveColor(content.color as DotColor)
       setPaths(prev => {
         const currentPath = prev[content.color as DotColor] || []
         return {
           ...prev,
-          [content.color as DotColor]: currentPath.slice(0, content.index + 1)
+          [content.color as DotColor]: currentPath.slice(0, content.index! + 1)
         }
       })
     }
@@ -148,18 +148,18 @@ export function useDotsConnect() {
           }
         }
         
-        if (content.type === 'path') {
+        if (content.type === 'path' && content.index !== undefined) {
           if (content.color === activeColor) {
             // Self-intersection: truncate path to this point
             return {
               ...prev,
-              [activeColor]: currentPath.slice(0, content.index + 1)
+              [activeColor]: currentPath.slice(0, content.index! + 1)
             }
           } else {
             // Break the other path!
             const newPrev = { ...prev }
             const otherPath = newPrev[content.color as DotColor] || []
-            newPrev[content.color as DotColor] = otherPath.slice(0, content.index)
+            newPrev[content.color as DotColor] = otherPath.slice(0, content.index!)
             return {
               ...newPrev,
               [activeColor]: [...currentPath, [r, c]]

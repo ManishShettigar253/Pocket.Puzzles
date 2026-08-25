@@ -7,6 +7,7 @@ import ConnectFour from './pages/ConnectFour'
 import Game2048 from './pages/Game2048'
 import MemoryMatch from './pages/MemoryMatch'
 import RockPaperScissors from './pages/RockPaperScissors'
+import DotsConnect from './pages/DotsConnect'
 import { useEffect } from 'react'
 import { useAppStore } from './store/useAppStore'
 
@@ -73,30 +74,10 @@ export default function App() {
               </PageWrapper>
             }
           />
-          <Route
-            path="/2048"
-            element={
-              <PageWrapper>
-                <Game2048 />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/memory-match"
-            element={
-              <PageWrapper>
-                <MemoryMatch />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/rock-paper-scissors"
-            element={
-              <PageWrapper>
-                <RockPaperScissors />
-              </PageWrapper>
-            }
-          />
+          <Route path="/2048" element={<PageWrapper><Game2048 /></PageWrapper>} />
+          <Route path="/memory-match" element={<PageWrapper><MemoryMatch /></PageWrapper>} />
+          <Route path="/rock-paper-scissors" element={<PageWrapper><RockPaperScissors /></PageWrapper>} />
+          <Route path="/dots-connect" element={<PageWrapper><DotsConnect /></PageWrapper>} />
         </Routes>
       </AnimatePresence>
     </div>

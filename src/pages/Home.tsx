@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X } from 'lucide-react'
+import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X, Network } from 'lucide-react'
 import Layout from '../components/Layout'
 import ThemeToggle from '../components/ThemeToggle'
 import { getAllStats, type GameStats } from '../hooks/useStats'
@@ -71,6 +71,15 @@ const GAMES: GameCard[] = [
     path: '/rock-paper-scissors',
     gradient: 'from-purple-500 via-fuchsia-500 to-pink-500',
     accent: '#d946ef',
+  },
+  {
+    id: 'dots-connect',
+    title: 'Dots Connect',
+    description: 'Connect matching colors to fill the entire grid. Mind-bending puzzles!',
+    icon: <Network size={32} strokeWidth={2.5} />,
+    path: '/dots-connect',
+    gradient: 'from-sky-400 via-indigo-500 to-purple-600',
+    accent: '#6366f1',
   },
 ]
 

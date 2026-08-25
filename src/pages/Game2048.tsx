@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, RotateCcw, Trophy } from 'lucide-react'
 import { useNavigate, useBlocker } from 'react-router-dom'
 import Layout from '../components/Layout'
 import ThemeToggle from '../components/ThemeToggle'
-import { use2048, type Tile } from '../hooks/use2048'
+import { use2048 } from '../hooks/use2048'
 import ConfirmExitModal from '../components/ConfirmExitModal'
 
 function getTileColors(value: number) {

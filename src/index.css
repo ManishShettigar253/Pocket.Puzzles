@@ -39,7 +39,10 @@
 
 /* Global resets for mobile game experience */
 html, body, #root {
-  min-height: 100dvh;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
 }

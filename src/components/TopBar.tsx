@@ -21,6 +21,7 @@ interface TopBarProps {
   onDifficultyChange?: (d: Difficulty) => void
   onRestart?: () => void
   showSettings?: boolean
+  customSettings?: React.ReactNode
 }
 
 export default function TopBar({
@@ -33,6 +34,7 @@ export default function TopBar({
   onDifficultyChange,
   onRestart,
   showSettings = true,
+  customSettings,
 }: TopBarProps) {
   const navigate = useNavigate()
   const { soundEnabled, toggleSound } = useAppStore()
@@ -133,6 +135,7 @@ export default function TopBar({
                   <DifficultySelector difficulty={difficulty} onChange={(d) => { playClick(); onDifficultyChange(d) }} />
                 </div>
               )}
+              {customSettings}
               <button
                 onClick={() => {
                   playClick()

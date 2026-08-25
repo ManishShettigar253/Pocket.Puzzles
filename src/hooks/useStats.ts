@@ -71,7 +71,7 @@ export function useStats(gameId: string) {
 }
 
 export function getAllStats(): Record<string, GameStats> {
-  const games = ['tic-tac-toe', 'bingo', 'connect-four']
+  const games = ['tic-tac-toe', 'bingo', 'connect-four', '2048', 'memory-match', 'rock-paper-scissors']
   const result: Record<string, GameStats> = {}
   for (const game of games) {
     try {

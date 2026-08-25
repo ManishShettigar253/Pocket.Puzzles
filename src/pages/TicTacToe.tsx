@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
+import { useBlocker } from 'react-router-dom'
 import Layout from '../components/Layout'
 import TopBar from '../components/TopBar'
 import ScoreCard from '../components/ScoreCard'
 import GameEndModal from '../components/GameEndModal'
+import ConfirmExitModal from '../components/ConfirmExitModal'
 import { useTicTacToe } from '../hooks/useTicTacToe'
 import { useSound } from '../hooks/useSound'
 
@@ -24,6 +26,11 @@ export default function TicTacToe() {
     changeDifficulty,
   } = useTicTacToe()
   const { playMove } = useSound()
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      !gameOver && moveCount > 0 && currentLocation.pathname !== nextLocation.pathname
+  )
 
   const turnLabel =
     mode === 'pvai'
@@ -132,6 +139,12 @@ export default function TicTacToe() {
         result={getEndResult()}
         winnerName={getWinnerName()}
         onPlayAgain={resetBoard}
+      />
+
+      <ConfirmExitModal
+        isOpen={blocker.state === 'blocked'}
+        onConfirm={() => blocker.proceed?.()}
+        onCancel={() => blocker.reset?.()}
       />
     </Layout>
   )

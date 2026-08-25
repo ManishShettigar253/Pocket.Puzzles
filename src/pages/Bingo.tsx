@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion'
 import { Shuffle } from 'lucide-react'
+import { useBlocker } from 'react-router-dom'
 import Layout from '../components/Layout'
 import TopBar from '../components/TopBar'
 import ScoreCard from '../components/ScoreCard'
 import GameEndModal from '../components/GameEndModal'
+import ConfirmExitModal from '../components/ConfirmExitModal'
 import { useBingo } from '../hooks/useBingo'
 import { useSound } from '../hooks/useSound'
 import type { BingoBoard, BingoMarked } from '../utils/bingoLogic'
@@ -27,6 +29,11 @@ export default function Bingo() {
     shuffleBoard,
   } = useBingo()
   const { playMove, playBingo } = useSound()
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      !gameOver && calledNumbers.size > 0 && currentLocation.pathname !== nextLocation.pathname
+  )
 
   const turnLabel =
     mode === 'pvai'
@@ -127,6 +134,12 @@ export default function Bingo() {
         result={getEndResult()}
         winnerName={getWinnerName()}
         onPlayAgain={resetBoard}
+      />
+
+      <ConfirmExitModal
+        isOpen={blocker.state === 'blocked'}
+        onConfirm={() => blocker.proceed?.()}
+        onCancel={() => blocker.reset?.()}
       />
     </Layout>
   )

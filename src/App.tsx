@@ -4,6 +4,9 @@ import Home from './pages/Home'
 import TicTacToe from './pages/TicTacToe'
 import Bingo from './pages/Bingo'
 import ConnectFour from './pages/ConnectFour'
+import Game2048 from './pages/Game2048'
+import MemoryMatch from './pages/MemoryMatch'
+import RockPaperScissors from './pages/RockPaperScissors'
 import { useEffect } from 'react'
 import { useAppStore } from './store/useAppStore'
 
@@ -67,6 +70,30 @@ export default function App() {
             element={
               <PageWrapper>
                 <ConnectFour />
+              </PageWrapper>
+            }
+          />
+          <Route
+            path="/2048"
+            element={
+              <PageWrapper>
+                <Game2048 />
+              </PageWrapper>
+            }
+          />
+          <Route
+            path="/memory-match"
+            element={
+              <PageWrapper>
+                <MemoryMatch />
+              </PageWrapper>
+            }
+          />
+          <Route
+            path="/rock-paper-scissors"
+            element={
+              <PageWrapper>
+                <RockPaperScissors />
               </PageWrapper>
             }
           />

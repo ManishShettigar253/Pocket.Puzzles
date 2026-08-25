@@ -11,7 +11,7 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
-      theme: 'dark',
+      theme: 'light',
       soundEnabled: true,
       toggleTheme: () =>
         set((state) => {
@@ -42,6 +42,4 @@ if (savedSettings) {
   } catch {
     // ignore
   }
-} else {
-  document.documentElement.classList.add('dark')
 }

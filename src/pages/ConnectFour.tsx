@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
+import { useBlocker } from 'react-router-dom'
 import Layout from '../components/Layout'
 import TopBar from '../components/TopBar'
 import ScoreCard from '../components/ScoreCard'
 import GameEndModal from '../components/GameEndModal'
+import ConfirmExitModal from '../components/ConfirmExitModal'
 import { useConnectFour } from '../hooks/useConnectFour'
 import { useSound } from '../hooks/useSound'
 import { COLS } from '../utils/connectFourLogic'
@@ -28,6 +30,11 @@ export default function ConnectFour() {
   } = useConnectFour()
   const { playDrop } = useSound()
   const [hoverCol, setHoverCol] = useState<number | null>(null)
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      !gameOver && lastDrop !== null && currentLocation.pathname !== nextLocation.pathname
+  )
 
   const turnLabel =
     mode === 'pvai'
@@ -176,6 +183,12 @@ export default function ConnectFour() {
         result={getEndResult()}
         winnerName={getWinnerName()}
         onPlayAgain={resetBoard}
+      />
+
+      <ConfirmExitModal
+        isOpen={blocker.state === 'blocked'}
+        onConfirm={() => blocker.proceed?.()}
+        onCancel={() => blocker.reset?.()}
       />
     </Layout>
   )

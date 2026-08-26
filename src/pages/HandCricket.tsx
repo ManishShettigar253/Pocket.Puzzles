@@ -152,6 +152,8 @@ export default function HandCricket() {
     } else {
       setShowResultModal(false)
     }
+    // Always close the dropdown when phase changes (e.g. innings break)
+    setShowAllOvers(false)
   }, [phase])
 
   return (
@@ -285,12 +287,12 @@ export default function HandCricket() {
                       <div className="flex flex-col gap-2 max-h-[150px] overflow-y-auto pr-1">
                         {overs.slice(0, -1).map((over, overIdx) => (
                           <div key={overIdx} className="flex items-center gap-2">
-                            <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest w-12 shrink-0">Ovr {overIdx + 1}</span>
-                            <div className="flex gap-1.5 flex-1">
+                            <span className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest shrink-0 px-2">OVR {overIdx + 1}</span>
+                            <div className="flex gap-1.5 ml-auto mr-9">
                               {over.map((run, ballIdx) => (
                                 <div 
                                   key={ballIdx}
-                                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shadow-sm shrink-0
+                                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shadow-sm shrink-0
                                     ${run === 'W' 
                                       ? 'bg-rose-500 text-white' 
                                       : run === 6 

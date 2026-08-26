@@ -206,14 +206,11 @@ export function useDotsConnect() {
     }
 
     if (allConnected) {
-      // Check if grid is full
-      if (totalPathCells === level.gridSize * level.gridSize) {
-        // Round Win!
-        setScore(prev => prev + (level.gridSize === 4 ? 100 : level.gridSize === 5 ? 150 : 200))
-        setTimeout(() => {
-          nextRound()
-        }, 800) // Small delay to show complete state
-      }
+      // Round Win!
+      setScore(prev => prev + (level.gridSize === 4 ? 100 : level.gridSize === 5 ? 150 : 200))
+      setTimeout(() => {
+        nextRound()
+      }, 800) // Small delay to show complete state
     }
   }, [paths, level, gameOver, nextRound])
 

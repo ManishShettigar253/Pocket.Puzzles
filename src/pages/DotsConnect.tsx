@@ -147,7 +147,7 @@ function SizeSelection({ onSelect }: { onSelect: (s: GridSize) => void }) {
       </div>
       <h2 className="text-2xl font-black mb-2">Select Grid Size</h2>
       <p className="text-sm text-[var(--text-secondary)] mb-8">
-        Connect the matching colors. Fill the entire board!
+        Connect all matching colors to complete the level!
       </p>
 
       <div className="flex flex-col gap-3">

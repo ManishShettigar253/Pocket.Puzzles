@@ -8,6 +8,7 @@ export type Tile = {
   col: number
   isNew?: boolean
   isMerged?: boolean
+  isDead?: boolean
 }
 
 const GRID_SIZE = 4
@@ -24,8 +25,9 @@ function getEmptyCells(tiles: Tile[]): { r: number; c: number }[] {
   return empty
 }
 
+let tileIdCounter = 0
 function generateTileId() {
-  return Math.random().toString(36).substring(2, 9)
+  return `tile-${Date.now()}-${tileIdCounter++}`
 }
 
 function spawnRandomTile(tiles: Tile[]): Tile | null {
@@ -42,8 +44,8 @@ function spawnRandomTile(tiles: Tile[]): Tile | null {
 }
 
 export function use2048() {
-  const [tiles, setTiles] = useState<Tile[]>([])
-  const [score, setScore] = useState(0)
+  const [gameState, setGameState] = useState<{ tiles: Tile[]; score: number }>({ tiles: [], score: 0 })
+  const { tiles, score } = gameState
   const [bestScore, setBestScore] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [won, setWon] = useState(false)
@@ -72,8 +74,7 @@ export function use2048() {
     const t2 = spawnRandomTile(initialTiles)
     if (t2) initialTiles.push(t2)
     
-    setTiles(initialTiles)
-    setScore(0)
+    setGameState({ tiles: initialTiles, score: 0 })
     setGameOver(false)
     setWon(false)
     setHasContinued(false)
@@ -91,21 +92,26 @@ export function use2048() {
     (direction: 'UP' | 'DOWN' | 'LEFT' | 'RIGHT') => {
       if (gameOver || (won && !hasContinued)) return
 
-      setTiles((prevTiles) => {
+      setGameState((prevState) => {
+        const { tiles: prevTiles, score: prevScore } = prevState
         let hasMoved = false
         let addedScore = 0
         const newTiles: Tile[] = []
         
-        // Remove 'isNew' and 'isMerged' flags from previous step
-        const currentTiles = prevTiles.map((t) => ({ ...t, isNew: false, isMerged: false }))
+        // Remove 'isNew' and 'isMerged' flags from previous step, and filter out dead tiles
+        const currentTiles = prevTiles
+          .filter((t) => !t.isDead)
+          .map((t) => ({ ...t, isNew: false, isMerged: false }))
 
         // Create a 2D map of current tiles for easy access
         const map = Array(GRID_SIZE).fill(null).map(() => Array<Tile | null>(GRID_SIZE).fill(null))
         currentTiles.forEach((t) => (map[t.row][t.col] = t))
 
+        type LineItem = { tile: Tile | null; deadTiles: Tile[] }
+
         // We process row by row or col by col based on direction
         const traverse = (
-          processLine: (line: (Tile | null)[]) => { newLine: (Tile | null)[], moved: boolean, score: number }
+          processLine: (line: (Tile | null)[]) => { newLine: LineItem[], moved: boolean, score: number }
         ) => {
           if (direction === 'LEFT' || direction === 'RIGHT') {
             for (let r = 0; r < GRID_SIZE; r++) {
@@ -117,12 +123,17 @@ export function use2048() {
               addedScore += score
 
               let finalLine = direction === 'RIGHT' ? [...newLine].reverse() : newLine
-              finalLine.forEach((t, c) => {
-                if (t) {
-                  t.row = r
-                  t.col = c
-                  newTiles.push(t)
+              finalLine.forEach((item, c) => {
+                if (item.tile) {
+                  item.tile.row = r
+                  item.tile.col = c
+                  newTiles.push(item.tile)
                 }
+                item.deadTiles.forEach(dt => {
+                  dt.row = r
+                  dt.col = c
+                  newTiles.push(dt)
+                })
               })
             }
           } else {
@@ -135,12 +146,17 @@ export function use2048() {
               addedScore += score
 
               let finalLine = direction === 'DOWN' ? [...newLine].reverse() : newLine
-              finalLine.forEach((t, r) => {
-                if (t) {
-                  t.row = r
-                  t.col = c
-                  newTiles.push(t)
+              finalLine.forEach((item, r) => {
+                if (item.tile) {
+                  item.tile.row = r
+                  item.tile.col = c
+                  newTiles.push(item.tile)
                 }
+                item.deadTiles.forEach(dt => {
+                  dt.row = r
+                  dt.col = c
+                  newTiles.push(dt)
+                })
               })
             }
           }
@@ -150,13 +166,9 @@ export function use2048() {
           let moved = false
           let score = 0
           
-          // First pass: remove empty spaces
           let compact = line.filter((t) => t !== null) as Tile[]
-          if (compact.length !== line.length) moved = true // At least some empty spaces were removed, or might be empty
-          // But actually, it only moved if a tile shifted index
-          // We check move properly below
 
-          let newLine: (Tile | null)[] = []
+          let newLine: LineItem[] = []
           let i = 0
           while (i < compact.length) {
             if (i < compact.length - 1 && compact[i].value === compact[i + 1].value) {
@@ -164,30 +176,34 @@ export function use2048() {
               const mergedValue = compact[i].value * 2
               score += mergedValue
               newLine.push({
-                id: compact[i].id, // keep id for animation
-                value: mergedValue,
-                row: 0, col: 0, // will be updated by traverse
-                isMerged: true,
+                tile: {
+                  id: compact[i].id, // keep id for animation
+                  value: mergedValue,
+                  row: 0, col: 0,
+                  isMerged: true,
+                },
+                deadTiles: [{ ...compact[i + 1], isDead: true }]
               })
               i += 2
               moved = true // merging implies movement
             } else {
-              newLine.push({ ...compact[i] })
+              newLine.push({ tile: { ...compact[i] }, deadTiles: [] })
               i++
             }
           }
 
-          // Pad with nulls
-          while (newLine.length < GRID_SIZE) {
-            newLine.push(null)
-          }
-
-          // Strict check for movement (did anything change pos?)
-          // If the values at indices changed, it moved
+          // Strict check for movement before padding
           const originalVals = line.map((t) => (t ? t.value : 0))
-          const newVals = newLine.map((t) => (t ? t.value : 0))
+          const newVals = newLine.map((item) => (item.tile ? item.tile.value : 0))
+          // pad newVals for comparison
+          while (newVals.length < GRID_SIZE) newVals.push(0)
           if (originalVals.join(',') !== newVals.join(',')) {
             moved = true
+          }
+
+          // Pad with nulls
+          while (newLine.length < GRID_SIZE) {
+            newLine.push({ tile: null, deadTiles: [] })
           }
 
           return { newLine, moved, score }
@@ -200,11 +216,8 @@ export function use2048() {
           if (t) newTiles.push(t)
 
           // Update Score
-          setScore((s) => {
-            const newScore = s + addedScore
-            updateBestScore(newScore)
-            return newScore
-          })
+          const newScore = prevScore + addedScore
+          updateBestScore(newScore)
 
           // Check Win Condition
           if (!won && newTiles.some((t) => t.value === 2048)) {
@@ -240,10 +253,10 @@ export function use2048() {
             }
           }
 
-          return newTiles
+          return { tiles: newTiles, score: newScore }
         }
 
-        return prevTiles // No movement
+        return prevState // No movement
       })
     },
     [gameOver, won, hasContinued, updateBestScore, recordResult]

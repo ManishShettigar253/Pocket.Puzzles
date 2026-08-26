@@ -81,6 +81,15 @@ const GAMES: GameCard[] = [
     gradient: 'from-sky-400 via-indigo-500 to-purple-600',
     accent: '#6366f1',
   },
+  {
+    id: 'hand-cricket',
+    title: 'Hand Cricket',
+    description: 'Classic playground game! Bat, bowl, and chase targets against the AI.',
+    icon: <span className="text-3xl filter grayscale brightness-200">🏏</span>,
+    path: '/hand-cricket',
+    gradient: 'from-emerald-400 via-green-500 to-teal-600',
+    accent: '#10b981',
+  },
 ]
 
 const container = {
@@ -114,8 +123,9 @@ export default function Home() {
 
   const totalGames = Object.values(allStats).reduce((s, g) => s + g.gamesPlayed, 0)
   const totalWins = Object.values(allStats).reduce((s, g) => s + g.wins, 0)
-  const overallWinRate = totalGames > 0 ? Math.round((totalWins / totalGames) * 100) : 0
-  const bestStreak = Object.values(allStats).reduce((s, g) => Math.max(s, g.bestStreak), 0)
+  const totalLosses = Object.values(allStats).reduce((s, g) => s + g.losses, 0)
+  const totalDecisiveGames = totalWins + totalLosses
+  const overallWinRate = totalDecisiveGames > 0 ? Math.round((totalWins / totalDecisiveGames) * 100) : 0
 
   return (
     <Layout className="overflow-hidden">
@@ -166,9 +176,9 @@ export default function Home() {
             <div className="w-px h-8 bg-[var(--border-color)]" />
             <StatItem icon={<TrendingUp size={16} />} label="Win Rate" value={`${overallWinRate}%`} />
             <div className="w-px h-8 bg-[var(--border-color)]" />
-            <StatItem icon={<Flame size={16} />} label="Best Streak" value={bestStreak} />
-            <div className="w-px h-8 bg-[var(--border-color)]" />
             <StatItem icon={<Trophy size={16} />} label="Wins" value={totalWins} />
+            <div className="w-px h-8 bg-[var(--border-color)]" />
+            <StatItem icon={<X size={16} />} label="Losses" value={totalLosses} />
           </div>
         </motion.div>
 

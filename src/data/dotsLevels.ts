@@ -68,46 +68,46 @@ const seed4x4_2: DotsLevel = {
 const seed5x5_1: DotsLevel = {
   gridSize: 5,
   dots: [
-    { color: 'red', start: [0, 0], end: [2, 2] },
-    { color: 'blue', start: [0, 3], end: [3, 3] },
-    { color: 'green', start: [0, 4], end: [4, 4] },
-    { color: 'yellow', start: [1, 0], end: [4, 3] },
-    { color: 'orange', start: [2, 1], end: [3, 2] }
+    { color: 'red', start: [0, 0], end: [3, 3] },
+    { color: 'blue', start: [0, 4], end: [4, 4] },
+    { color: 'green', start: [1, 0], end: [4, 0] },
+    { color: 'yellow', start: [1, 1], end: [3, 2] },
+    { color: 'orange', start: [2, 1], end: [4, 3] }
   ]
 }
 
 const seed5x5_2: DotsLevel = {
   gridSize: 5,
   dots: [
-    { color: 'red', start: [0, 1], end: [4, 0] },
-    { color: 'blue', start: [0, 2], end: [3, 2] },
-    { color: 'green', start: [0, 3], end: [4, 4] },
-    { color: 'yellow', start: [1, 1], end: [4, 2] },
-    { color: 'orange', start: [1, 3], end: [4, 3] }
+    { color: 'red', start: [0, 0], end: [4, 0] },
+    { color: 'blue', start: [0, 1], end: [4, 4] },
+    { color: 'green', start: [1, 1], end: [3, 3] },
+    { color: 'yellow', start: [2, 1], end: [4, 3] },
+    { color: 'orange', start: [2, 2], end: [3, 2] }
   ]
 }
 
 const seed6x6_1: DotsLevel = {
   gridSize: 6,
   dots: [
-    { color: 'red', start: [0, 0], end: [5, 1] },
+    { color: 'red', start: [0, 0], end: [3, 4] },
     { color: 'blue', start: [0, 5], end: [5, 5] },
-    { color: 'green', start: [0, 1], end: [4, 2] },
-    { color: 'yellow', start: [2, 2], end: [4, 4] },
-    { color: 'orange', start: [2, 3], end: [3, 4] },
-    { color: 'purple', start: [1, 4], end: [2, 5] }
+    { color: 'green', start: [1, 0], end: [5, 0] },
+    { color: 'yellow', start: [1, 1], end: [3, 3] },
+    { color: 'orange', start: [2, 1], end: [5, 4] },
+    { color: 'purple', start: [2, 2], end: [4, 4] }
   ]
 }
 
 const seed6x6_2: DotsLevel = {
   gridSize: 6,
   dots: [
-    { color: 'red', start: [0, 0], end: [2, 2] },
-    { color: 'blue', start: [1, 0], end: [3, 2] },
-    { color: 'green', start: [2, 0], end: [4, 2] },
-    { color: 'yellow', start: [3, 0], end: [5, 2] },
-    { color: 'orange', start: [4, 0], end: [5, 1] },
-    { color: 'purple', start: [0, 5], end: [5, 5] }
+    { color: 'red', start: [0, 0], end: [5, 0] },
+    { color: 'blue', start: [0, 1], end: [5, 5] },
+    { color: 'green', start: [1, 1], end: [5, 4] },
+    { color: 'yellow', start: [2, 1], end: [4, 3] },
+    { color: 'orange', start: [3, 1], end: [5, 3] },
+    { color: 'purple', start: [3, 2], end: [4, 2] }
   ]
 }
 

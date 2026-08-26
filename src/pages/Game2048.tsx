@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, RotateCcw, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowUp, ArrowDown, ArrowRight, RotateCcw, Trophy } from 'lucide-react'
 import { useNavigate, useBlocker } from 'react-router-dom'
 import Layout from '../components/Layout'
 import ThemeToggle from '../components/ThemeToggle'
@@ -168,9 +168,10 @@ export default function Game2048() {
                   initial={tile.isNew ? { scale: 0, opacity: 0 } : false}
                   animate={{
                     scale: tile.isMerged ? [1, 1.2, 1] : 1,
-                    opacity: 1,
+                    opacity: tile.isDead ? 0 : 1,
                     x: `calc(${tile.col * 100}% + ${tile.col * 10}px)`,
                     y: `calc(${tile.row * 100}% + ${tile.row * 10}px)`,
+                    zIndex: tile.isDead ? 0 : 10,
                   }}
                   transition={{
                     type: 'spring',
@@ -236,9 +237,43 @@ export default function Game2048() {
           </AnimatePresence>
         </div>
 
+        {/* On-screen Controls */}
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <button 
+            onClick={() => moveTiles('UP')} 
+            className="w-14 h-14 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-full flex items-center justify-center shadow-md active:scale-95 active:bg-slate-200 dark:active:bg-slate-700 transition-all text-[var(--text-primary)]"
+            aria-label="Move Up"
+          >
+            <ArrowUp size={28} />
+          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => moveTiles('LEFT')} 
+              className="w-14 h-14 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-full flex items-center justify-center shadow-md active:scale-95 active:bg-slate-200 dark:active:bg-slate-700 transition-all text-[var(--text-primary)]"
+              aria-label="Move Left"
+            >
+              <ArrowLeft size={28} />
+            </button>
+            <button 
+              onClick={() => moveTiles('DOWN')} 
+              className="w-14 h-14 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-full flex items-center justify-center shadow-md active:scale-95 active:bg-slate-200 dark:active:bg-slate-700 transition-all text-[var(--text-primary)]"
+              aria-label="Move Down"
+            >
+              <ArrowDown size={28} />
+            </button>
+            <button 
+              onClick={() => moveTiles('RIGHT')} 
+              className="w-14 h-14 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-full flex items-center justify-center shadow-md active:scale-95 active:bg-slate-200 dark:active:bg-slate-700 transition-all text-[var(--text-primary)]"
+              aria-label="Move Right"
+            >
+              <ArrowRight size={28} />
+            </button>
+          </div>
+        </div>
+
         {/* Instructions */}
-        <p className="mt-8 text-center text-sm text-[var(--text-secondary)]">
-          <strong>How to play:</strong> Swipe (or use arrow keys) to move tiles. Tiles with the same number merge into one!
+        <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
+          <strong>How to play:</strong> Swipe, use on-screen arrows, or use arrow keys to move tiles. Tiles with the same number merge into one!
         </p>
       </div>
 

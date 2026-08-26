@@ -75,5 +75,18 @@ export function useSound() {
     })
   }, [soundEnabled, playTone])
 
-  return { playMove, playClick, playWin, playDraw, playLose, playDrop, playBingo }
+  const playHit = useCallback(() => {
+    playTone(300, 0.05, 'triangle', 0.2)
+    setTimeout(() => playTone(600, 0.08, 'sine', 0.1), 50)
+  }, [playTone])
+
+  const playWicket = useCallback(() => {
+    if (!soundEnabled) return
+    const notes = [200, 150, 100]
+    notes.forEach((freq, i) => {
+      setTimeout(() => playTone(freq, 0.3, 'sawtooth', 0.2), i * 150)
+    })
+  }, [soundEnabled, playTone])
+
+  return { playMove, playClick, playWin, playDraw, playLose, playDrop, playBingo, playHit, playWicket }
 }

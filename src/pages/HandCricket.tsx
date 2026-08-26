@@ -3,12 +3,22 @@ import { Trophy, RefreshCcw, ChevronDown, ChevronUp } from 'lucide-react'
 import TopBar from '../components/TopBar'
 import Layout from '../components/Layout'
 import { useHandCricket } from '../hooks/useHandCricket'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 const formatOvers = (balls: number) => {
   const overs = Math.floor(balls / 6)
   const remainder = balls % 6
   return `${overs}.${remainder}`
+}
+
+const HAND_EMOJIS: Record<number, string> = {
+  0: '✊',
+  1: '☝️',
+  2: '✌️',
+  3: '🤟',
+  4: '🖖',
+  5: '🖐️',
+  6: '👍',
 }
 
 function OversSelector({ value, onChange }: { value: number | null, onChange: (v: number | null) => void }) {
@@ -100,6 +110,32 @@ export default function HandCricket() {
     startSecondInnings,
   } = useHandCricket()
   const [showAllOvers, setShowAllOvers] = useState(false)
+  const [playerFloat, setPlayerFloat] = useState<{ id: number, text: string, color: string } | null>(null)
+  const [aiFloat, setAiFloat] = useState<{ id: number, text: string, color: string } | null>(null)
+  const prevHistoryLengthRef = useRef(0)
+  const isAiBatting = playerRole === 'bowl'
+
+  useEffect(() => {
+    if (currentInningsHistory.length > prevHistoryLengthRef.current) {
+      const lastRun = currentInningsHistory[currentInningsHistory.length - 1]
+      const text = lastRun === 'W' ? 'OUT!' : `+${lastRun}`
+      const color = lastRun === 'W' ? 'text-rose-500' : 'text-primary-500'
+      const id = Date.now()
+      
+      if (isAiBatting) {
+        setAiFloat({ id, text, color })
+        setTimeout(() => {
+          setAiFloat(prev => prev?.id === id ? null : prev)
+        }, 900)
+      } else {
+        setPlayerFloat({ id, text, color })
+        setTimeout(() => {
+          setPlayerFloat(prev => prev?.id === id ? null : prev)
+        }, 900)
+      }
+    }
+    prevHistoryLengthRef.current = currentInningsHistory.length
+  }, [currentInningsHistory, isAiBatting])
 
   // Group history into overs
   const overs = []
@@ -118,8 +154,6 @@ export default function HandCricket() {
     }
   }, [phase])
 
-  const isAiBatting = playerRole === 'bowl'
-
   return (
     <Layout className="bg-[var(--bg-primary)]">
       <TopBar 
@@ -134,16 +168,7 @@ export default function HandCricket() {
         }
       />
 
-      {/* Main Game Arena */}
       <div className="flex-1 flex flex-col w-full max-w-lg mx-auto overflow-y-auto hide-scrollbar relative">
-        
-        {/* Background Pitch Graphic */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-10">
-          <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-500/50 via-transparent to-transparent"></div>
-          {/* Pitch lines */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-32 border-x border-[var(--text-primary)]"></div>
-        </div>
-
         <div className="relative z-10 flex-1 flex flex-col p-4 sm:p-6 gap-6">
 
           {/* Scoreboard */}
@@ -160,7 +185,7 @@ export default function HandCricket() {
                     <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
                     {isAiBatting ? 'AI BATTING' : 'YOU BATTING'}
                   </span>
-                  <div className="flex items-baseline gap-1 mt-1">
+                  <div className="flex items-baseline gap-1 mt-1 relative">
                     <span className="text-4xl font-black tabular-nums text-[var(--text-primary)] leading-none">
                       {isAiBatting ? aiScore : playerScore}
                     </span>
@@ -205,14 +230,9 @@ export default function HandCricket() {
             </motion.div>
           )}
 
-          {/* Commentary & Run Tracker */}
+          {/* Run Tracker */}
           {(phase === 'first_innings' || phase === 'second_innings' || phase === 'game_over') && (
             <div className="flex flex-col gap-3">
-              <div className="bg-[var(--bg-card)] rounded-2xl p-4 shadow-sm border border-[var(--border-color)] text-center min-h-[60px] flex items-center justify-center">
-                <p className="text-sm font-medium text-[var(--text-primary)] transition-all animate-fade-in">
-                  {commentary}
-                </p>
-              </div>
 
               {/* Ball-by-ball Tracker */}
               <div className="bg-[var(--bg-card)] rounded-xl p-2.5 border border-[var(--border-color)] flex flex-col gap-2">
@@ -305,12 +325,31 @@ export default function HandCricket() {
                   key={`player-${playerLastPlay}-${playerBalls}`}
                   initial={{ scale: 0.5, opacity: 0, y: 20 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
-                  className="w-24 h-28 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl flex items-center justify-center shadow-md relative overflow-hidden"
+                  className="w-24 h-28 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl flex items-center justify-center shadow-md relative"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary-500/10 to-transparent"></div>
-                  <span className="text-6xl font-black tabular-nums text-[var(--text-primary)]">
-                    {playerLastPlay !== null ? playerLastPlay : '?'}
+                  <AnimatePresence>
+                    {playerFloat && (
+                      <motion.div
+                        key={playerFloat.id}
+                        initial={{ opacity: 1, scale: 1.5, y: -40, x: 0 }}
+                        animate={{ opacity: 0.3, scale: 0.5, y: -260, x: -30 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8, ease: "easeIn" }}
+                        className={`absolute inset-0 m-auto w-max h-max z-50 font-black drop-shadow-2xl text-4xl ${playerFloat.color} pointer-events-none`}
+                      >
+                        {playerFloat.text}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary-500/10 to-transparent rounded-3xl overflow-hidden pointer-events-none"></div>
+                  <span className="text-[72px] leading-none drop-shadow-md pb-2">
+                    {playerLastPlay !== null ? HAND_EMOJIS[playerLastPlay] : <span className="text-[var(--text-secondary)] opacity-30">?</span>}
                   </span>
+                  {playerLastPlay !== null && (
+                    <div className="absolute bottom-2 right-2.5 bg-[var(--bg-primary)]/80 backdrop-blur-sm rounded-lg px-2 py-0.5 border border-[var(--border-color)] shadow-sm flex items-center justify-center">
+                      <span className="text-xs font-black tabular-nums text-primary-500">{playerLastPlay}</span>
+                    </div>
+                  )}
                 </motion.div>
               </div>
 
@@ -325,12 +364,31 @@ export default function HandCricket() {
                   key={`ai-${aiLastPlay}-${aiBalls}`}
                   initial={{ scale: 0.5, opacity: 0, y: -20 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
-                  className="w-24 h-28 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl flex items-center justify-center shadow-md relative overflow-hidden"
+                  className="w-24 h-28 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl flex items-center justify-center shadow-md relative"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-b from-rose-500/10 to-transparent"></div>
-                  <span className="text-6xl font-black tabular-nums text-[var(--text-primary)]">
-                    {aiLastPlay !== null ? aiLastPlay : '?'}
+                  <AnimatePresence>
+                    {aiFloat && (
+                      <motion.div
+                        key={aiFloat.id}
+                        initial={{ opacity: 1, scale: 1.5, y: -40, x: 0 }}
+                        animate={{ opacity: 0.3, scale: 0.5, y: -260, x: -180 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8, ease: "easeIn" }}
+                        className={`absolute inset-0 m-auto w-max h-max z-50 font-black drop-shadow-2xl text-4xl ${aiFloat.color} pointer-events-none`}
+                      >
+                        {aiFloat.text}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-b from-rose-500/10 to-transparent rounded-3xl overflow-hidden pointer-events-none"></div>
+                  <span className="text-[72px] leading-none drop-shadow-md pb-2">
+                    {aiLastPlay !== null ? HAND_EMOJIS[aiLastPlay] : <span className="text-[var(--text-secondary)] opacity-30">?</span>}
                   </span>
+                  {aiLastPlay !== null && (
+                    <div className="absolute bottom-2 right-2.5 bg-[var(--bg-primary)]/80 backdrop-blur-sm rounded-lg px-2 py-0.5 border border-[var(--border-color)] shadow-sm flex items-center justify-center">
+                      <span className="text-xs font-black tabular-nums text-rose-500">{aiLastPlay}</span>
+                    </div>
+                  )}
                 </motion.div>
               </div>
             </div>
@@ -437,18 +495,16 @@ export default function HandCricket() {
 
           {/* Input Controls (Number Pad) */}
           {(phase === 'first_innings' || phase === 'second_innings') && (
-            <div className="mt-auto pt-4 pb-2 z-20">
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-[260px] mx-auto w-full">
+            <div className="mt-auto pt-4 pb-2 z-20 w-full">
+              <div className="flex flex-wrap gap-2 sm:gap-3 max-w-[280px] mx-auto px-2 pb-2 justify-center">
                 {[1, 2, 3, 4, 5, 6, 0].map((num) => (
                   <button
                     key={num}
                     onClick={() => playNumber(num)}
-                    className={`relative overflow-hidden group aspect-square rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm flex items-center justify-center hover:border-primary-500/50 hover:bg-[var(--bg-primary)] active:scale-95 transition-all
-                      ${num === 0 ? 'col-start-2' : ''}
-                    `}
+                    className="relative shrink-0 w-12 sm:w-14 h-12 sm:h-14 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm flex flex-col items-center justify-center hover:border-primary-500/50 hover:bg-[var(--bg-primary)] active:scale-95 transition-all group overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-primary-600/0 group-hover:from-primary-500/10 group-hover:to-primary-600/10 transition-colors"></div>
-                    <span className="text-3xl font-black text-[var(--text-primary)]">{num}</span>
+                    <span className="text-2xl sm:text-3xl font-black text-[var(--text-primary)] relative z-10">{num}</span>
                   </button>
                 ))}
               </div>

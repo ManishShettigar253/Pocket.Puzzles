@@ -215,7 +215,7 @@ export function useDotsConnect() {
   }, [paths, level, gameOver, nextRound])
 
   const quitGame = useCallback(() => {
-    setGridSize(null)
+    setGridSize(5)
   }, [])
 
   return {

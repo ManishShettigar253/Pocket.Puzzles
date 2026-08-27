@@ -119,7 +119,7 @@ export default function HandCricket() {
 
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      phase !== 'setup' && phase !== 'game_over' && currentLocation.pathname !== nextLocation.pathname
+      phase !== 'toss_selection' && phase !== 'game_over' && currentLocation.pathname !== nextLocation.pathname
   )
 
   useEffect(() => {

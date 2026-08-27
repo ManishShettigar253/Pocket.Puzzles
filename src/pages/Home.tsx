@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X, Network } from 'lucide-react'
+import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X, Network, ListFilter, Check } from 'lucide-react'
 import Layout from '../components/Layout'
 import ThemeToggle from '../components/ThemeToggle'
 import { getAllStats, type GameStats } from '../hooks/useStats'
@@ -37,24 +37,6 @@ const GAMES: GameCard[] = [
     accent: '#f59e0b',
   },
   {
-    id: 'connect-four',
-    title: 'Connect Four',
-    description: '7×6 board. Drop discs and connect 4 in a row to win!',
-    icon: <Circle size={32} strokeWidth={2.5} />,
-    path: '/connect-four',
-    gradient: 'from-blue-500 via-indigo-500 to-violet-500',
-    accent: '#6366f1',
-  },
-  {
-    id: '2048',
-    title: '2048',
-    description: 'Slide tiles and merge numbers to reach the ultimate 2048 tile!',
-    icon: <LayoutGrid size={32} strokeWidth={2.5} />,
-    path: '/2048',
-    gradient: 'from-yellow-400 via-amber-500 to-orange-500',
-    accent: '#f59e0b',
-  },
-  {
     id: 'memory-match',
     title: 'Memory Match',
     description: 'Flip cards and find matching pairs! Test your memory.',
@@ -62,6 +44,15 @@ const GAMES: GameCard[] = [
     path: '/memory-match',
     gradient: 'from-cyan-500 via-teal-500 to-emerald-500',
     accent: '#14b8a6',
+  },
+  {
+    id: 'connect-four',
+    title: 'Connect Four',
+    description: '7×6 board. Drop discs and connect 4 in a row to win!',
+    icon: <Circle size={32} strokeWidth={2.5} />,
+    path: '/connect-four',
+    gradient: 'from-blue-500 via-indigo-500 to-violet-500',
+    accent: '#6366f1',
   },
   {
     id: 'rock-paper-scissors',
@@ -73,15 +64,6 @@ const GAMES: GameCard[] = [
     accent: '#d946ef',
   },
   {
-    id: 'dots-connect',
-    title: 'Dots Connect',
-    description: 'Connect matching colors to fill the entire grid. Mind-bending puzzles!',
-    icon: <Network size={32} strokeWidth={2.5} />,
-    path: '/dots-connect',
-    gradient: 'from-sky-400 via-indigo-500 to-purple-600',
-    accent: '#6366f1',
-  },
-  {
     id: 'hand-cricket',
     title: 'Hand Cricket',
     description: 'Classic playground game! Bat, bowl, and chase targets against the AI.',
@@ -89,6 +71,24 @@ const GAMES: GameCard[] = [
     path: '/hand-cricket',
     gradient: 'from-emerald-400 via-green-500 to-teal-600',
     accent: '#10b981',
+  },
+  {
+    id: '2048',
+    title: '2048',
+    description: 'Slide tiles and merge numbers to reach the ultimate 2048 tile!',
+    icon: <LayoutGrid size={32} strokeWidth={2.5} />,
+    path: '/2048',
+    gradient: 'from-yellow-400 via-amber-500 to-orange-500',
+    accent: '#f59e0b',
+  },
+  {
+    id: 'dots-connect',
+    title: 'Dots Connect',
+    description: 'Connect matching colors to fill the entire grid. Mind-bending puzzles!',
+    icon: <Network size={32} strokeWidth={2.5} />,
+    path: '/dots-connect',
+    gradient: 'from-sky-400 via-indigo-500 to-purple-600',
+    accent: '#6366f1',
   },
 ]
 
@@ -110,16 +110,46 @@ export default function Home() {
   const allStats = useMemo(() => getAllStats(), [])
   const [searchQuery, setSearchQuery] = useState('')
   const [showDevModal, setShowDevModal] = useState(false)
+  const [sortBy, setSortBy] = useState<'default' | 'alphabetical' | 'most-played' | 'win-rate'>('default')
+  const [showSortDropdown, setShowSortDropdown] = useState(false)
 
   const filteredGames = useMemo(() => {
-    if (!searchQuery.trim()) return GAMES
-    const query = searchQuery.toLowerCase()
-    return GAMES.filter(
-      (game) =>
-        game.title.toLowerCase().includes(query) ||
-        game.description.toLowerCase().includes(query)
-    )
-  }, [searchQuery])
+    let result = GAMES
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(
+        (game) =>
+          game.title.toLowerCase().includes(query) ||
+          game.description.toLowerCase().includes(query)
+      )
+    }
+
+    if (sortBy === 'alphabetical') {
+      result = [...result].sort((a, b) => a.title.localeCompare(b.title))
+    } else if (sortBy === 'most-played') {
+      result = [...result].sort((a, b) => {
+        const aPlayed = allStats[a.id]?.gamesPlayed || 0
+        const bPlayed = allStats[b.id]?.gamesPlayed || 0
+        return bPlayed - aPlayed
+      })
+    } else if (sortBy === 'win-rate') {
+      result = [...result].sort((a, b) => {
+        const aStats = allStats[a.id]
+        const bStats = allStats[b.id]
+        
+        const aTotalDecisive = aStats ? aStats.wins + aStats.losses : 0
+        const bTotalDecisive = bStats ? bStats.wins + bStats.losses : 0
+        
+        const aWinRate = aTotalDecisive > 0 ? (aStats!.wins / aTotalDecisive) : -1
+        const bWinRate = bTotalDecisive > 0 ? (bStats!.wins / bTotalDecisive) : -1
+        
+        return bWinRate - aWinRate
+      })
+    }
+
+    return result
+  }, [searchQuery, sortBy, allStats])
 
   const totalGames = Object.values(allStats).reduce((s, g) => s + g.gamesPlayed, 0)
   const totalWins = Object.values(allStats).reduce((s, g) => s + g.wins, 0)
@@ -187,17 +217,72 @@ export default function Home() {
           <h2 className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider shrink-0">
             Choose a game
           </h2>
-          <div className="relative w-full sm:max-w-xs">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search size={14} className="text-[var(--text-secondary)]" />
+          <div className="relative w-full sm:max-w-xs flex items-center gap-2">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={14} className="text-[var(--text-secondary)]" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search games..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-9 pr-3 py-2 text-sm bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
+              />
             </div>
-            <input
-              type="text"
-              placeholder="Search games..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-9 pr-3 py-2 text-sm bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
-            />
+            
+            <div className="relative shrink-0">
+              <button
+                onClick={() => setShowSortDropdown(!showSortDropdown)}
+                className={`w-[38px] h-[38px] rounded-xl flex items-center justify-center border transition-all shadow-sm ${
+                  showSortDropdown || sortBy !== 'default'
+                    ? 'bg-primary-500/10 text-primary-500 border-primary-500/30'
+                    : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-color)] hover:text-[var(--text-primary)] hover:border-primary-500/30'
+                }`}
+                aria-label="Sort games"
+              >
+                <ListFilter size={18} />
+              </button>
+              
+              <AnimatePresence>
+                {showSortDropdown && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setShowSortDropdown(false)} 
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-2 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-xl z-50 overflow-hidden py-1"
+                    >
+                      {[
+                        { id: 'default', label: 'Default Order' },
+                        { id: 'alphabetical', label: 'Alphabetical' },
+                        { id: 'most-played', label: 'Most Played' },
+                        { id: 'win-rate', label: 'Highest Win Rate' }
+                      ].map((opt) => (
+                        <button
+                          key={opt.id}
+                          onClick={() => {
+                            setSortBy(opt.id as any)
+                            setShowSortDropdown(false)
+                          }}
+                          className={`w-full text-left px-4 py-2.5 text-sm flex items-center justify-between hover:bg-[var(--bg-primary)] transition-colors ${
+                            sortBy === opt.id ? 'text-primary-500 font-bold' : 'text-[var(--text-primary)] font-medium'
+                          }`}
+                        >
+                          {opt.label}
+                          {sortBy === opt.id && <Check size={14} />}
+                        </button>
+                      ))}
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>

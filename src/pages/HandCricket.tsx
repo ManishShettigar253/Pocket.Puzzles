@@ -3,6 +3,8 @@ import { Trophy, RefreshCcw, ChevronDown, ChevronUp } from 'lucide-react'
 import TopBar from '../components/TopBar'
 import Layout from '../components/Layout'
 import { useHandCricket } from '../hooks/useHandCricket'
+import { useBlocker } from 'react-router-dom'
+import ConfirmExitModal from '../components/ConfirmExitModal'
 import { useEffect, useState, useRef } from 'react'
 
 const formatOvers = (balls: number) => {
@@ -114,6 +116,11 @@ export default function HandCricket() {
   const [aiFloat, setAiFloat] = useState<{ id: number, text: string, color: string } | null>(null)
   const prevHistoryLengthRef = useRef(0)
   const isAiBatting = playerRole === 'bowl'
+
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      phase !== 'setup' && phase !== 'game_over' && currentLocation.pathname !== nextLocation.pathname
+  )
 
   useEffect(() => {
     if (currentInningsHistory.length > prevHistoryLengthRef.current) {
@@ -640,6 +647,12 @@ export default function HandCricket() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ConfirmExitModal
+        isOpen={blocker.state === 'blocked'}
+        onConfirm={() => blocker.proceed?.()}
+        onCancel={() => blocker.reset?.()}
+      />
     </Layout>
   )
 }

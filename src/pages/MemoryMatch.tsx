@@ -21,7 +21,7 @@ export default function MemoryMatch() {
 
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      !isGameOver && moves > 0 && currentLocation.pathname !== nextLocation.pathname
+      !isGameOver && (moves > 0 || cards.some(c => c.isFlipped)) && currentLocation.pathname !== nextLocation.pathname
   )
 
   const columns = Math.sqrt(gridSize)

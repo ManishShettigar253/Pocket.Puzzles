@@ -34,7 +34,7 @@ export default function Game2048() {
   
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      !gameOver && !won && score > 0 && currentLocation.pathname !== nextLocation.pathname
+      !gameOver && !won && (score > 0 || tiles.length > 2) && currentLocation.pathname !== nextLocation.pathname
   )
 
   // Touch handlers for swipe

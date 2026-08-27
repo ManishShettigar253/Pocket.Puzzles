@@ -49,74 +49,64 @@ export default function DotsConnect() {
 
   return (
     <Layout className="overflow-hidden">
-      {gridSize ? (
-        <>
-          <TopBar
-            title="Dots Connect"
-            onRestart={() => startGame(gridSize)}
-            showSettings={true}
-            customSettings={
-              <div className="flex items-center bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl p-1 shadow-sm shrink-0">
-                {[
-                  { size: 4, label: '4×4', color: '#22c55e' },
-                  { size: 5, label: '5×5', color: '#f59e0b' },
-                  { size: 6, label: '6×6', color: '#ef4444' }
-                ].map((opt) => (
-                  <button
-                    key={opt.size}
-                    onClick={() => startGame(opt.size as GridSize)}
-                    className={`relative px-3 py-2 rounded-xl text-[11px] uppercase tracking-wider font-bold transition-colors ${
-                      gridSize === opt.size
-                        ? 'text-white'
-                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                    }`}
-                  >
-                    {gridSize === opt.size && (
-                      <motion.div
-                        layoutId="grid-size-pill"
-                        className="absolute inset-0 rounded-xl"
-                        style={{ backgroundColor: opt.color }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                    <span className="relative z-10">{opt.label}</span>
-                  </button>
-                ))}
-              </div>
-            }
-          />
-          {/* Stats Bar */}
-          <div className="flex justify-center items-center gap-6 px-4 py-3 shrink-0">
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Round</span>
-              <span className="text-2xl font-black text-[var(--text-primary)] tabular-nums">
-                {currentRound + 1}
-                <span className="text-sm text-[var(--text-secondary)]"> / 10</span>
-              </span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Score</span>
-              <span className="text-lg font-bold text-primary-500 tabular-nums mt-1">{score}</span>
-            </div>
+      <TopBar
+        title="Dots Connect"
+        onRestart={() => startGame(gridSize)}
+        showSettings={true}
+        customSettings={
+          <div className="flex items-center bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl p-1 shadow-sm shrink-0">
+            {[
+              { size: 4, label: '4×4', color: '#22c55e' },
+              { size: 5, label: '5×5', color: '#f59e0b' },
+              { size: 6, label: '6×6', color: '#ef4444' }
+            ].map((opt) => (
+              <button
+                key={opt.size}
+                onClick={() => startGame(opt.size as GridSize)}
+                className={`relative px-3 py-2 rounded-xl text-[11px] uppercase tracking-wider font-bold transition-colors ${
+                  gridSize === opt.size
+                    ? 'text-white'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                }`}
+              >
+                {gridSize === opt.size && (
+                  <motion.div
+                    layoutId="grid-size-pill"
+                    className="absolute inset-0 rounded-xl"
+                    style={{ backgroundColor: opt.color }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{opt.label}</span>
+              </button>
+            ))}
           </div>
-        </>
-      ) : (
-        <TopBar title="Dots Connect" showSettings={false} />
-      )}
+        }
+      />
+      {/* Stats Bar */}
+      <div className="flex justify-center items-center gap-6 px-4 py-3 shrink-0">
+        <div className="flex flex-col items-center">
+          <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Round</span>
+          <span className="text-2xl font-black text-[var(--text-primary)] tabular-nums">
+            {currentRound + 1}
+            <span className="text-sm text-[var(--text-secondary)]"> / 10</span>
+          </span>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider">Score</span>
+          <span className="text-lg font-bold text-primary-500 tabular-nums mt-1">{score}</span>
+        </div>
+      </div>
 
       <div className="flex-1 flex flex-col items-center justify-center p-5 min-h-0 relative z-0">
-        {!gridSize ? (
-          <SizeSelection onSelect={startGame} />
-        ) : (
-          <GameGrid
-            size={gridSize}
-            level={level!}
-            paths={paths}
-            onPointerDown={handlePointerDown}
-            onPointerEnter={handlePointerEnter}
-            onPointerUp={handlePointerUp}
-          />
-        )}
+        <GameGrid
+          size={gridSize}
+          level={level!}
+          paths={paths}
+          onPointerDown={handlePointerDown}
+          onPointerEnter={handlePointerEnter}
+          onPointerUp={handlePointerUp}
+        />
       </div>
 
       <GameEndModal
@@ -135,49 +125,7 @@ export default function DotsConnect() {
   )
 }
 
-function SizeSelection({ onSelect }: { onSelect: (s: GridSize) => void }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-sm bg-[var(--bg-card)] p-6 rounded-3xl shadow-xl border border-[var(--border-color)] text-center"
-    >
-      <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-emerald-500 rounded-2xl mx-auto mb-4 flex items-center justify-center text-white shadow-lg">
-        <span className="text-2xl filter grayscale brightness-200">✨</span>
-      </div>
-      <h2 className="text-2xl font-black mb-2">Select Grid Size</h2>
-      <p className="text-sm text-[var(--text-secondary)] mb-8">
-        Connect all matching colors to complete the level!
-      </p>
 
-      <div className="flex flex-col gap-3">
-        <SelectionButton size={4} label="4x4 Grid" points="1000 max score" onClick={() => onSelect(4)} color="from-green-400 to-emerald-500" />
-        <SelectionButton size={5} label="5x5 Grid" points="1500 max score" onClick={() => onSelect(5)} color="from-blue-400 to-indigo-500" />
-        <SelectionButton size={6} label="6x6 Grid" points="2000 max score" onClick={() => onSelect(6)} color="from-purple-400 to-pink-500" />
-      </div>
-    </motion.div>
-  )
-}
-
-function SelectionButton({ label, points, color, onClick }: any) {
-  return (
-    <button
-      onClick={onClick}
-      className={`relative overflow-hidden w-full p-4 rounded-2xl text-left transition-transform active:scale-95 group shadow-sm hover:shadow-md`}
-    >
-      <div className={`absolute inset-0 bg-gradient-to-r ${color} opacity-10 group-hover:opacity-20 transition-opacity`} />
-      <div className="relative flex justify-between items-center">
-        <div>
-          <span className="block font-black text-lg text-[var(--text-primary)]">{label}</span>
-          <span className="text-xs font-bold text-[var(--text-secondary)]">{points}</span>
-        </div>
-        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${color} text-white flex items-center justify-center shadow-sm`}>
-          →
-        </div>
-      </div>
-    </button>
-  )
-}
 
 function GameGrid({ size, level, paths, onPointerDown, onPointerEnter, onPointerUp }: any) {
   const gridRef = useRef<HTMLDivElement>(null)

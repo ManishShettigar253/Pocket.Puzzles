@@ -90,72 +90,10 @@ export default function RockPaperScissors() {
       </div>
 
       {/* Battle Arena */}
-      <div className="flex-1 flex flex-col items-center justify-center min-h-0 relative">
+      <div className="flex-1 flex flex-row items-center justify-center min-h-0 relative w-full px-4 overflow-hidden">
         
-        {/* AI Side (Top) */}
-        <div className="flex-1 flex flex-col items-center justify-end pb-8 w-full">
-          <AnimatePresence mode="wait">
-            {isRevealing ? (
-              <motion.div
-                key="thinking"
-                animate={{ 
-                  rotate: [0, 10, -10, 10, -10, 0],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ duration: 0.5, repeat: Infinity }}
-                className="text-8xl drop-shadow-xl filter grayscale"
-              >
-                🤛
-              </motion.div>
-            ) : aiChoice ? (
-              <motion.div
-                key={aiChoice}
-                initial={{ scale: 0.5, opacity: 0, rotate: 45 }}
-                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                className="text-8xl drop-shadow-xl"
-              >
-                {AI_ICONS[aiChoice]}
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="w-24 h-24 rounded-full border-4 border-dashed border-[var(--border-color)] flex items-center justify-center opacity-50"
-              >
-                <span className="text-3xl text-[var(--text-secondary)]">🤖</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Center Divider / Result */}
-        <div className="shrink-0 h-16 flex items-center justify-center z-10 my-4 relative w-full px-8">
-          <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-[var(--border-color)] to-transparent" />
-          <AnimatePresence mode="wait">
-            {result ? (
-              <motion.div
-                key="result"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className={`
-                  px-6 py-2 rounded-full font-black text-lg tracking-widest uppercase shadow-lg border-2 z-10 bg-[var(--bg-card)]
-                  ${result === 'win' ? 'text-green-500 border-green-500 shadow-green-500/20' : ''}
-                  ${result === 'loss' ? 'text-rose-500 border-rose-500 shadow-rose-500/20' : ''}
-                  ${result === 'draw' ? 'text-gray-400 border-gray-400' : ''}
-                `}
-              >
-                {result === 'win' ? 'Round Won' : result === 'loss' ? 'Round Lost' : 'Draw'}
-              </motion.div>
-            ) : (
-              <div className="px-6 py-2 rounded-full font-black text-xl tracking-widest text-[var(--text-secondary)] uppercase bg-[var(--bg-primary)] border-2 border-[var(--border-color)] z-10 opacity-50">
-                VS
-              </div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Player Side (Bottom) */}
-        <div className="flex-1 flex flex-col items-center justify-start pt-8 w-full">
+        {/* Player Side (Left) */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full">
           <AnimatePresence mode="wait">
             {isRevealing ? (
               <motion.div
@@ -165,16 +103,16 @@ export default function RockPaperScissors() {
                   scale: [1, 1.1, 1]
                 }}
                 transition={{ duration: 0.5, repeat: Infinity }}
-                className="text-8xl drop-shadow-xl filter grayscale"
+                className="text-[100px] sm:text-[140px] drop-shadow-2xl filter grayscale"
               >
                 👊
               </motion.div>
             ) : playerChoice ? (
               <motion.div
                 key={playerChoice}
-                initial={{ scale: 0.5, opacity: 0, rotate: -45 }}
-                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                className="text-8xl drop-shadow-xl"
+                initial={{ scale: 0.5, opacity: 0, x: -20 }}
+                animate={{ scale: 1, opacity: 1, x: 0 }}
+                className="text-[100px] sm:text-[140px] drop-shadow-2xl"
               >
                 {ICONS[playerChoice]}
               </motion.div>
@@ -182,14 +120,80 @@ export default function RockPaperScissors() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="w-24 h-24 rounded-full border-4 border-dashed border-[var(--border-color)] flex items-center justify-center opacity-50"
+                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-dashed border-[var(--border-color)] flex items-center justify-center opacity-50"
               >
-                <span className="text-3xl text-[var(--text-secondary)]">👤</span>
+                <span className="text-5xl sm:text-6xl text-[var(--text-secondary)]">👤</span>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
+        {/* Center Divider */}
+        <div className="shrink-0 w-8 flex items-center justify-center z-10 relative h-full">
+          <div className="absolute h-[80%] w-[2px] bg-gradient-to-b from-transparent via-[var(--border-color)] to-transparent" />
+        </div>
+
+        {/* AI Side (Right) */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full">
+          <AnimatePresence mode="wait">
+            {isRevealing ? (
+              <motion.div
+                key="thinking"
+                animate={{ 
+                  rotate: [0, 10, -10, 10, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ duration: 0.5, repeat: Infinity }}
+                className="text-[100px] sm:text-[140px] drop-shadow-2xl filter grayscale"
+              >
+                🤛
+              </motion.div>
+            ) : aiChoice ? (
+              <motion.div
+                key={aiChoice}
+                initial={{ scale: 0.5, opacity: 0, x: 20 }}
+                animate={{ scale: 1, opacity: 1, x: 0 }}
+                className="text-[100px] sm:text-[140px] drop-shadow-2xl"
+              >
+                {AI_ICONS[aiChoice]}
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-dashed border-[var(--border-color)] flex items-center justify-center opacity-50"
+              >
+                <span className="text-5xl sm:text-6xl text-[var(--text-secondary)]">🤖</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+      </div>
+
+      {/* Result Badge */}
+      <div className="shrink-0 flex items-center justify-center h-16 z-20">
+        <AnimatePresence mode="wait">
+          {result ? (
+            <motion.div
+              key="result"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className={`
+                px-6 py-2 rounded-full font-black text-sm tracking-widest uppercase shadow-lg border-2 z-10 bg-[var(--bg-card)] whitespace-nowrap text-center
+                ${result === 'win' ? 'text-green-500 border-green-500 shadow-green-500/20' : ''}
+                ${result === 'loss' ? 'text-rose-500 border-rose-500 shadow-rose-500/20' : ''}
+                ${result === 'draw' ? 'text-gray-400 border-gray-400' : ''}
+              `}
+            >
+              {result === 'win' ? 'Round Won' : result === 'loss' ? 'Round Lost' : 'Draw'}
+            </motion.div>
+          ) : (
+            <div className="px-6 py-2 rounded-full font-black text-sm tracking-widest text-[var(--text-secondary)] uppercase bg-[var(--bg-primary)] border-2 border-[var(--border-color)] z-10 opacity-50">
+              VS
+            </div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Controls */}

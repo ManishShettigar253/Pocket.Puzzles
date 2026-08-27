@@ -8,7 +8,7 @@ interface PathState {
 }
 
 export function useDotsConnect() {
-  const [gridSize, setGridSize] = useState<GridSize | null>(null)
+  const [gridSize, setGridSize] = useState<GridSize>(5)
   const [currentRound, setCurrentRound] = useState(0) // 0 to 9
   const [score, setScore] = useState(0)
   const [gameOver, setGameOver] = useState(false)

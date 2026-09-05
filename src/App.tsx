@@ -11,6 +11,7 @@ import DotsConnect from './pages/DotsConnect'
 import HandCricket from './pages/HandCricket'
 import Tetris from './pages/Tetris'
 import TowerOfHanoi from './pages/TowerOfHanoi'
+import DrawFlow from './pages/DrawFlow'
 import { useEffect } from 'react'
 import { useAppStore } from './store/useAppStore'
 
@@ -84,6 +85,7 @@ export default function App() {
           <Route path="/hand-cricket" element={<PageWrapper><HandCricket /></PageWrapper>} />
           <Route path="/tetris" element={<PageWrapper><Tetris /></PageWrapper>} />
           <Route path="/tower-of-hanoi" element={<PageWrapper><TowerOfHanoi /></PageWrapper>} />
+          <Route path="/draw-flow" element={<PageWrapper><DrawFlow /></PageWrapper>} />
         </Routes>
       </AnimatePresence>
     </div>

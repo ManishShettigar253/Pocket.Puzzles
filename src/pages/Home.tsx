@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X, Network, ListFilter, Check, Layers } from 'lucide-react'
+import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X, Network, ListFilter, Check, Layers, PenTool } from 'lucide-react'
 import Layout from '../components/Layout'
 import ThemeToggle from '../components/ThemeToggle'
 import { getAllStats, type GameStats } from '../hooks/useStats'
@@ -107,6 +107,15 @@ const GAMES: GameCard[] = [
     path: '/dots-connect',
     gradient: 'from-sky-400 via-indigo-500 to-purple-600',
     accent: '#6366f1',
+  },
+  {
+    id: 'draw-flow',
+    title: 'Draw Flow',
+    description: 'Trace the entire pattern in one continuous stroke without lifting your pen!',
+    icon: <PenTool size={32} strokeWidth={2.5} />,
+    path: '/draw-flow',
+    gradient: 'from-cyan-400 via-violet-500 to-fuchsia-500',
+    accent: '#06b6d4',
   },
 ]
 

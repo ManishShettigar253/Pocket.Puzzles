@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X, Network, ListFilter, Check } from 'lucide-react'
+import { Grid3X3, Hash, Circle, Trophy, Gamepad2, Flame, TrendingUp, Search, LayoutGrid, Info, X, Network, ListFilter, Check, Layers } from 'lucide-react'
 import Layout from '../components/Layout'
 import ThemeToggle from '../components/ThemeToggle'
 import { getAllStats, type GameStats } from '../hooks/useStats'
@@ -35,6 +35,15 @@ const GAMES: GameCard[] = [
     path: '/bingo',
     gradient: 'from-amber-500 via-orange-500 to-red-500',
     accent: '#f59e0b',
+  },
+  {
+    id: 'tower-of-hanoi',
+    title: 'Tower of Hanoi',
+    description: 'Move the stack of disks to the destination tower one by one!',
+    icon: <Layers size={32} strokeWidth={2.5} />,
+    path: '/tower-of-hanoi',
+    gradient: 'from-amber-400 via-rose-500 to-violet-600',
+    accent: '#f43f5e',
   },
   {
     id: 'tetris',

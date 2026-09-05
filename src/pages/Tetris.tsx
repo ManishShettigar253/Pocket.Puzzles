@@ -133,16 +133,6 @@ function CtrlBtn({ id, onPress, icon, label, size = 44, width, variant = 'arrow'
   )
 }
 
-// ─── Stat card ────────────────────────────────────────────────
-function Stat({ label, value, gold }: { label: string; value: string | number; gold?: boolean }) {
-  return (
-    <div className="flex flex-col items-center justify-center bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl py-2 px-1 min-w-0 shadow-sm">
-      <span className="text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-wider leading-none">{label}</span>
-      <span className={`text-lg font-black tabular-nums leading-tight mt-1 ${gold ? 'text-amber-400' : 'text-[var(--text-primary)]'}`}>{value}</span>
-    </div>
-  )
-}
-
 // ─── Main Page ────────────────────────────────────────────────
 export default function Tetris() {
   const navigate = useNavigate()
@@ -304,7 +294,7 @@ export default function Tetris() {
   const ico = btnSize * 0.44
 
   return (
-    <Layout className="flex flex-col overflow-hidden" style={{ height: '100dvh' } as React.CSSProperties}>
+    <Layout className="flex flex-col overflow-hidden h-[100dvh]">
 
       {/* ── Header ── */}
       <div className="shrink-0 flex items-center justify-between px-3 pt-2 pb-1">

@@ -9,6 +9,7 @@ import MemoryMatch from './pages/MemoryMatch'
 import RockPaperScissors from './pages/RockPaperScissors'
 import DotsConnect from './pages/DotsConnect'
 import HandCricket from './pages/HandCricket'
+import Tetris from './pages/Tetris'
 import { useEffect } from 'react'
 import { useAppStore } from './store/useAppStore'
 
@@ -80,6 +81,7 @@ export default function App() {
           <Route path="/rock-paper-scissors" element={<PageWrapper><RockPaperScissors /></PageWrapper>} />
           <Route path="/dots-connect" element={<PageWrapper><DotsConnect /></PageWrapper>} />
           <Route path="/hand-cricket" element={<PageWrapper><HandCricket /></PageWrapper>} />
+          <Route path="/tetris" element={<PageWrapper><Tetris /></PageWrapper>} />
         </Routes>
       </AnimatePresence>
     </div>

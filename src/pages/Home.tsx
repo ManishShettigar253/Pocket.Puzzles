@@ -37,6 +37,15 @@ const GAMES: GameCard[] = [
     accent: '#f59e0b',
   },
   {
+    id: 'tetris',
+    title: 'Tetris',
+    description: 'Stack falling blocks and clear lines in this colorful neon classic!',
+    icon: <LayoutGrid size={32} strokeWidth={2.5} />,
+    path: '/tetris',
+    gradient: 'from-cyan-400 via-violet-500 to-fuchsia-600',
+    accent: '#8b5cf6',
+  },
+  {
     id: 'memory-match',
     title: 'Memory Match',
     description: 'Flip cards and find matching pairs! Test your memory.',

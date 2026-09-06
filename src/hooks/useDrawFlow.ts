@@ -66,7 +66,7 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
       { from: 2, to: 3 },
     ],
   },
-  // Round 3: Diamond with Cross (5 nodes, 8 edges)
+  // Round 3: Diamond with Cross (5 nodes, 7 edges - 1 line removed for Eulerian trail)
   {
     id: 3,
     name: 'Diamond Star',
@@ -81,7 +81,6 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
       { from: 0, to: 1 },
       { from: 0, to: 3 },
       { from: 4, to: 1 },
-      { from: 4, to: 3 },
       { from: 0, to: 2 },
       { from: 4, to: 2 },
       { from: 1, to: 2 },
@@ -131,7 +130,7 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
       { from: 1, to: 2 },
     ],
   },
-  // Round 6: Winged Kite (6 nodes, 10 edges)
+  // Round 6: Winged Kite (6 nodes, 11 edges - all even degree)
   {
     id: 6,
     name: 'Wind Kite',
@@ -146,14 +145,15 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
     edges: [
       { from: 0, to: 1 },
       { from: 0, to: 3 },
-      { from: 0, to: 2 },
       { from: 1, to: 2 },
       { from: 2, to: 3 },
       { from: 1, to: 4 },
       { from: 3, to: 5 },
-      { from: 4, to: 5 },
       { from: 2, to: 4 },
       { from: 2, to: 5 },
+      { from: 1, to: 5 },
+      { from: 3, to: 4 },
+      { from: 4, to: 5 },
     ],
   },
   // Round 7: Crown (6 nodes, 9 edges)
@@ -180,7 +180,7 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
       { from: 4, to: 5 },
     ],
   },
-  // Round 8: Hexagram Star with Center (7 nodes, 12 edges)
+  // Round 8: Hexagram Star with Center (7 nodes, 14 edges - 2 odd degree nodes at peaks)
   {
     id: 8,
     name: 'Hex Star',
@@ -200,12 +200,14 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
       { from: 3, to: 4 },
       { from: 4, to: 5 },
       { from: 5, to: 0 },
+      { from: 0, to: 2 },
+      { from: 2, to: 4 },
+      { from: 4, to: 0 },
+      { from: 1, to: 3 },
+      { from: 3, to: 5 },
+      { from: 5, to: 1 },
       { from: 0, to: 6 },
-      { from: 1, to: 6 },
-      { from: 2, to: 6 },
       { from: 3, to: 6 },
-      { from: 4, to: 6 },
-      { from: 5, to: 6 },
     ],
   },
   // Round 9: Pyramid Citadel (7 nodes, 11 edges)
@@ -235,7 +237,7 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
       { from: 3, to: 5 },
     ],
   },
-  // Round 10: The Sacred Mandala / Mystic Cube (8 nodes, 14 edges)
+  // Round 10: The Sacred Mandala / Mystic Cube (8 nodes, 18 edges - all even degree)
   {
     id: 10,
     name: 'Mystic Polygram',
@@ -256,14 +258,18 @@ export const DRAW_FLOW_LEVELS: DrawFlowLevel[] = [
       { from: 2, to: 6 },
       { from: 5, to: 7 },
       { from: 6, to: 7 },
+      { from: 2, to: 5 },
+      { from: 3, to: 4 },
       { from: 0, to: 3 },
       { from: 1, to: 4 },
-      { from: 3, to: 4 },
       { from: 2, to: 3 },
       { from: 4, to: 5 },
       { from: 3, to: 6 },
       { from: 4, to: 7 },
       { from: 3, to: 7 },
+      { from: 4, to: 6 },
+      { from: 0, to: 4 },
+      { from: 1, to: 3 },
     ],
   },
 ]
